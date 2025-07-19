@@ -11,6 +11,10 @@ public class PlayerController : MonoBehaviour
     private GameObject bulletPrefab;
     [SerializeField]
     private Transform firePoint;
+    [SerializeField]
+    private int weaponLevel = 1;
+    [SerializeField]
+    private int soldierCount = 0;
 
     private Camera mainCamera;
     private bool isDragging = false;
@@ -80,7 +84,29 @@ public class PlayerController : MonoBehaviour
     {
         if (bulletPrefab != null && firePoint != null)
         {
-            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Bullet bullet = bulletObj.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.SetDamage(weaponLevel);
+            }
         }
+    }
+
+    public void UpgradeWeapon(int level)
+    {
+        weaponLevel += level;
+    }
+
+    public void AdjustSoldiers(int amount)
+    {
+        soldierCount += amount;
+        if (soldierCount < 0)
+            soldierCount = 0;
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(10, 30, 200, 20), "Soldiers: " + soldierCount);
     }
 }

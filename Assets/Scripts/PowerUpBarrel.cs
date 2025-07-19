@@ -1,28 +1,28 @@
 using UnityEngine;
 
-public class PowerUpBarrel : MonoBehaviour
+public class PowerUpBarrel : MonoBehaviour, IDamageable
 {
     [SerializeField]
     private int weaponLevel = 1;
     [SerializeField]
     private float health = 10f;
 
-    void Update()
+    public void TakeDamage(float amount)
     {
-        if (health <= 0)
+        health -= amount;
+        if (health <= 0f)
         {
             CollectPowerUp();
         }
     }
 
-    public void TakeDamage(float amount)
-    {
-        health -= amount;
-    }
-
     void CollectPowerUp()
     {
-        // TODO: give player new weapon based on weaponLevel
+        PlayerController player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            player.UpgradeWeapon(weaponLevel);
+        }
         Destroy(gameObject);
     }
 }

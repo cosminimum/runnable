@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SoldierPowerUp : MonoBehaviour
+public class SoldierPowerUp : MonoBehaviour, IDamageable
 {
     [SerializeField]
     private int soldierValue = 1;
@@ -18,11 +18,20 @@ public class SoldierPowerUp : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float amount)
+    {
+        soldierValue += Mathf.RoundToInt(amount);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // TODO: add or remove soldiers from player based on soldierValue
+            PlayerController player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.AdjustSoldiers(soldierValue);
+            }
             Destroy(gameObject);
         }
     }
